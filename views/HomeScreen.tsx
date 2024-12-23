@@ -5,11 +5,11 @@ import { ParamListBase, useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import filmService from '../services/film';
 import Toast from 'react-native-toast-message';
-
+import test from '../services/test';
 const HomeScreen = () => {
   const { width, height } = useWindowDimensions();
   const navigation = useNavigation<NativeStackNavigationProp<ParamListBase>>();
-
+  const [testCard,setTestCard] =  useState([])
   const styles = StyleSheet.create({
     main: {
       paddingTop: 16,
@@ -49,6 +49,35 @@ const HomeScreen = () => {
        
     },[])
   
+  function renderingTestCard(){
+    return(
+      testCard.map((card:any)=>{
+       return <Button key={card.id} title={card.name}></Button>
+      })
+    )
+  }
+
+  function renderingHttpButton(){
+    return (
+      <View>
+        <Button title='http' onPress={()=>{
+          test.getHttp().then((res:any)=>{
+            setTestCard(res.data)
+          })
+        }}></Button>
+        
+         <Button title='https' onPress={()=>{
+           test.getHttps().then((res:any)=>{
+            setTestCard(res.data)
+          })
+         }}></Button>
+      </View>
+ 
+      
+     
+    )
+  }
+
   function renderAllFilms(){
     if(allFilms){
       return (
@@ -68,8 +97,8 @@ const HomeScreen = () => {
     showsVerticalScrollIndicator={false} 
     showsHorizontalScrollIndicator={false}
     style={styles.main}>
-    {(renderAllFilms())}
-   
+    {(renderingHttpButton())}
+    {(renderingTestCard())}
     </ScrollView >
   );
 };
